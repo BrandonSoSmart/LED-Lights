@@ -1,0 +1,615 @@
+input.buttonA.onEvent(ButtonEvent.Click, function () {
+    light.clear()
+    if (mode >= 19 && mode <= 21 && part <= 1) {
+        if (mode == 19) {
+            part += -1
+        } else {
+            part = 16
+        }
+        mode += -1
+    } else if (mode >= 19 && mode <= 20) {
+        part += -1
+    } else if (mode == 0) {
+        mode = 30
+    } else {
+        mode += -1
+    }
+    pins.LED.digitalWrite(true)
+    pause(100)
+    pins.LED.digitalWrite(false)
+    lock = 0
+})
+input.buttonsAB.onEvent(ButtonEvent.Click, function () {
+    if (brightness_level == 0 && mode == 0) {
+        light.setBrightness(31)
+        brightness_level = 1
+    } else if (brightness_level == 1 && mode == 0) {
+        light.setBrightness(63)
+        brightness_level = 0
+    }
+    mode = 0
+    part = 0
+    pins.LED.digitalWrite(true)
+    pause(100)
+    pins.LED.digitalWrite(false)
+})
+input.onGesture(Gesture.Shake, function () {
+    music.baDing.play()
+    pins.LED.digitalWrite(true)
+    pause(100)
+    pins.LED.digitalWrite(false)
+})
+input.buttonB.onEvent(ButtonEvent.Click, function () {
+    if (mode == 18 || mode == 19 && part == 16 || mode == 20 && part == 16) {
+        part = 1
+        mode += 1
+    } else if (mode == 19 || mode == 20) {
+        part += 1
+    } else {
+        mode += 1
+    }
+    pins.LED.digitalWrite(true)
+    pause(100)
+    pins.LED.digitalWrite(false)
+    lock = 0
+})
+let colorwheel = 0
+let changecolor = 0
+let bright = 0
+let fadecolor = 0
+let b = 0
+let g = 0
+let r = 0
+let startindex = 0
+let colorindex = 0
+let randomcolor = 0
+let randomwheel = 0
+let brightness_level = 0
+let lock = 0
+let part = 0
+let mode = 0
+light.setBrightness(63)
+music.setVolume(255)
+forever(function () {
+    Math.random()
+if (mode == 0) {
+        light.setAll(0x000000)
+    } else if (mode == 1) {
+        light.setAll(0xff0000)
+    } else if (mode == 2) {
+        light.setAll(0x00ff00)
+    } else if (mode == 3) {
+        light.setAll(0x0000ff)
+    } else if (mode == 4) {
+        light.setAll(0xffff00)
+    } else if (mode == 5) {
+        light.setAll(0x00ffff)
+    } else if (mode == 6) {
+        light.setAll(0xff00ff)
+    } else if (mode == 7) {
+        light.setAll(light.rgb(255, 127, 0))
+    } else if (mode == 8) {
+        light.setAll(light.rgb(0, 255, 127))
+    } else if (mode == 9) {
+        light.setAll(light.rgb(127, 0, 255))
+    } else if (mode == 10) {
+        light.setAll(light.rgb(127, 255, 0))
+    } else if (mode == 11) {
+        light.setAll(light.rgb(0, 127, 255))
+    } else if (mode == 12) {
+        light.setAll(light.rgb(255, 0, 127))
+    } else if (mode == 13) {
+        light.setAll(0xffffff)
+    } else if (mode == 14) {
+        light.setPixelColor(0, 0xff0000)
+        light.setPixelColor(1, 0xff8000)
+        light.setPixelColor(2, 0xffff00)
+        light.setPixelColor(3, 0x00ff00)
+        light.setPixelColor(4, 0x00ffff)
+        light.setPixelColor(5, 0x007fff)
+        light.setPixelColor(6, 0x0000ff)
+        light.setPixelColor(7, 0x7f00ff)
+        light.setPixelColor(8, 0xff00ff)
+        light.setPixelColor(9, 0xff0080)
+    } else if (mode == 15) {
+        light.showAnimation(light.rainbowAnimation, 1)
+    } else if (mode == 16) {
+        randomwheel = Math.randomRange(0, 5)
+        randomcolor = Math.randomRange(0, 255)
+        while (lock == 0) {
+            if (randomwheel == 0) {
+                light.setAll(light.rgb(randomcolor, 255, 0))
+            } else if (randomwheel == 1) {
+                light.setAll(light.rgb(0, 255, randomcolor))
+            } else if (randomwheel == 2) {
+                light.setAll(light.rgb(randomcolor, 0, 255))
+            } else if (randomwheel == 3) {
+                light.setAll(light.rgb(255, randomcolor, 0))
+            } else if (randomwheel == 4) {
+                light.setAll(light.rgb(255, 0, randomcolor))
+            } else if (randomwheel == 5) {
+                light.setAll(light.rgb(0, randomcolor, 255))
+            }
+            lock = 1
+        }
+    } else if (mode == 17) {
+        while (lock == 0) {
+            light.setAll(light.rgb(Math.randomRange(0, 255), Math.randomRange(0, 255), Math.randomRange(0, 255)))
+            lock = 1
+        }
+    } else if (mode == 18) {
+        pause(100)
+        for (let pixeln = 0; pixeln <= 9; pixeln++) {
+            randomwheel = Math.randomRange(0, 5)
+            randomcolor = Math.randomRange(0, 255)
+            if (randomwheel == 0) {
+                light.setPixelColor(pixeln, light.rgb(randomcolor, 255, 0))
+            } else if (randomwheel == 1) {
+                light.setPixelColor(pixeln, light.rgb(randomcolor, 0, 255))
+            } else if (randomwheel == 2) {
+                light.setPixelColor(pixeln, light.rgb(0, randomcolor, 255))
+            } else if (randomwheel == 3) {
+                light.setPixelColor(pixeln, light.rgb(255, randomcolor, 0))
+            } else if (randomwheel == 4) {
+                light.setPixelColor(pixeln, light.rgb(255, 0, randomcolor))
+            } else if (randomwheel == 5) {
+                light.setPixelColor(pixeln, light.rgb(0, 255, randomcolor))
+            }
+        }
+    } else if (mode == 19) {
+        colorindex = startindex
+        if (part < 14) {
+            r = 0
+            g = 0
+            b = 0
+        }
+        if (part == 1) {
+            r = 255
+        } else if (part == 2) {
+            g = 255
+        } else if (part == 3) {
+            b = 255
+        } else if (part == 4) {
+            r = 255
+            g = 255
+        } else if (part == 5) {
+            g = 255
+            b = 255
+        } else if (part == 6) {
+            r = 255
+            b = 255
+        } else if (part == 7) {
+            r = 255
+            g = 127
+        } else if (part == 8) {
+            g = 255
+            b = 127
+        } else if (part == 9) {
+            r = 127
+            b = 255
+        } else if (part == 10) {
+            r = 127
+            g = 255
+        } else if (part == 11) {
+            g = 127
+            b = 255
+        } else if (part == 12) {
+            r = 255
+            b = 127
+        } else if (part == 13) {
+            r = 255
+            g = 255
+            b = 255
+        } else if (part == 14) {
+            randomwheel = Math.randomRange(0, 5)
+            randomcolor = Math.randomRange(0, 255)
+            while (lock == 0) {
+                if (randomwheel == 0) {
+                    r = randomcolor
+                    b = 0
+                    g = 255
+                } else if (randomwheel == 1) {
+                    r = 0
+                    b = randomcolor
+                    g = 255
+                } else if (randomwheel == 2) {
+                    r = randomcolor
+                    b = 255
+                    g = 0
+                } else if (randomwheel == 3) {
+                    r = 255
+                    b = 0
+                    g = randomcolor
+                } else if (randomwheel == 4) {
+                    r = 255
+                    b = randomcolor
+                    g = 0
+                } else if (randomwheel == 5) {
+                    r = 0
+                    g = randomcolor
+                    b = 255
+                }
+                lock = 1
+            }
+        } else if (part == 15) {
+            while (lock == 0) {
+                r = Math.randomRange(0, 255)
+                g = Math.randomRange(0, 255)
+                b = Math.randomRange(0, 255)
+                lock = 1
+            }
+        } else {
+            fadecolor += 5
+            if (fadecolor <= 255) {
+                r = 255
+                g = fadecolor
+                b = 0
+            } else if (fadecolor <= 511) {
+                r = 511 - fadecolor
+                g = 255
+                b = 0
+            } else if (fadecolor <= 767) {
+                r = 0
+                g = 255
+                b = fadecolor - 512
+            } else if (fadecolor <= 1023) {
+                r = 0
+                g = 1023 - fadecolor
+                b = 255
+            } else if (fadecolor <= 1279) {
+                r = fadecolor - 1024
+                g = 0
+                b = 255
+            } else if (fadecolor <= 1535) {
+                r = 255
+                g = 0
+                b = 1535 - fadecolor
+            } else if (fadecolor > 1535) {
+                fadecolor = 0
+            }
+            part = 16
+        }
+        for (let index = 0; index <= 9; index++) {
+            colorindex += 1
+            if (colorindex == 1) {
+                light.setPixelColor(index, light.rgb(r, g, b))
+            } else if (colorindex == 2) {
+                light.setPixelColor(index, light.rgb(r * 0.8, g * 0.8, b * 0.8))
+            } else if (colorindex == 3) {
+                light.setPixelColor(index, light.rgb(r * 0.6, g * 0.6, b * 0.6))
+            } else if (colorindex == 4) {
+                light.setPixelColor(index, light.rgb(r * 0.4, g * 0.4, b * 0.4))
+            } else if (colorindex == 5) {
+                light.setPixelColor(index, light.rgb(r * 0.2, g * 0.2, b * 0.2))
+            } else {
+                light.setPixelColor(index, 0x000000)
+            }
+            if (colorindex > 9) {
+                colorindex = 0
+            }
+        }
+        startindex += 1
+        if (startindex > 9) {
+            startindex = 0
+        }
+        pause(200)
+    } else if (mode == 20) {
+        if (part < 14) {
+            r = 0
+            g = 0
+            b = 0
+        }
+        if (part == 1) {
+            r = 255
+        } else if (part == 2) {
+            g = 255
+        } else if (part == 3) {
+            b = 255
+        } else if (part == 4) {
+            r = 255
+            g = 255
+        } else if (part == 5) {
+            g = 255
+            b = 255
+        } else if (part == 6) {
+            r = 255
+            b = 255
+        } else if (part == 7) {
+            r = 255
+            g = 127
+        } else if (part == 8) {
+            g = 255
+            b = 127
+        } else if (part == 9) {
+            r = 127
+            b = 255
+        } else if (part == 10) {
+            r = 127
+            g = 255
+        } else if (part == 11) {
+            g = 127
+            b = 255
+        } else if (part == 12) {
+            r = 255
+            b = 127
+        } else if (part == 13) {
+            r = 255
+            g = 255
+            b = 255
+        } else if (part == 14) {
+            randomwheel = Math.randomRange(0, 5)
+            randomcolor = Math.randomRange(0, 255)
+            while (lock == 0) {
+                if (randomwheel == 0) {
+                    r = randomcolor
+                    b = 0
+                    g = 255
+                } else if (randomwheel == 1) {
+                    r = 0
+                    b = randomcolor
+                    g = 255
+                } else if (randomwheel == 2) {
+                    r = randomcolor
+                    b = 255
+                    g = 0
+                } else if (randomwheel == 3) {
+                    r = 255
+                    b = 0
+                    g = randomcolor
+                } else if (randomwheel == 4) {
+                    r = 255
+                    b = randomcolor
+                    g = 0
+                } else if (randomwheel == 5) {
+                    r = 0
+                    g = randomcolor
+                    b = 255
+                }
+                lock = 1
+            }
+        } else if (part == 15) {
+            while (lock == 0) {
+                r = Math.randomRange(0, 255)
+                g = Math.randomRange(0, 255)
+                b = Math.randomRange(0, 255)
+                lock = 1
+            }
+        } else {
+            fadecolor += 5
+            if (fadecolor <= 255) {
+                r = 255
+                g = fadecolor
+                b = 0
+            } else if (fadecolor <= 511) {
+                r = 511 - fadecolor
+                g = 255
+                b = 0
+            } else if (fadecolor <= 767) {
+                r = 0
+                g = 255
+                b = fadecolor - 512
+            } else if (fadecolor <= 1023) {
+                r = 0
+                g = 1023 - fadecolor
+                b = 255
+            } else if (fadecolor <= 1279) {
+                r = fadecolor - 1024
+                g = 0
+                b = 255
+            } else if (fadecolor <= 1535) {
+                r = 255
+                g = 0
+                b = 1535 - fadecolor
+            } else if (fadecolor > 1535) {
+                fadecolor = 0
+            }
+        }
+        light.setAll(light.rgb(r, g, b))
+        pause(50)
+        light.setAll(0x000000)
+        pause(50)
+    } else if (mode == 21) {
+        light.showAnimation(light.runningLightsAnimation, 1)
+    } else if (mode == 22) {
+        light.showAnimation(light.cometAnimation, 1)
+    } else if (mode == 23) {
+        light.showAnimation(light.sparkleAnimation, 1)
+    } else if (mode == 24) {
+        light.showAnimation(light.colorWipeAnimation, 1)
+    } else if (mode == 25) {
+        light.showAnimation(light.theaterChaseAnimation, 1)
+    } else if (mode == 26) {
+        fadecolor += 1
+        pause(10)
+        if (fadecolor <= 255) {
+            r = 255
+            g = fadecolor
+            b = 0
+        } else if (fadecolor <= 511) {
+            r = 511 - fadecolor
+            g = 255
+            b = 0
+        } else if (fadecolor <= 767) {
+            r = 0
+            g = 255
+            b = fadecolor - 512
+        } else if (fadecolor <= 1023) {
+            r = 0
+            g = 1023 - fadecolor
+            b = 255
+        } else if (fadecolor <= 1279) {
+            r = fadecolor - 1024
+            g = 0
+            b = 255
+        } else if (fadecolor <= 1535) {
+            r = 255
+            g = 0
+            b = 1535 - fadecolor
+        } else if (fadecolor > 1535) {
+            fadecolor = 0
+        }
+        light.setAll(light.rgb(r, g, b))
+    } else if (mode == 27) {
+        bright += 1
+        if (lock == 0) {
+            randomwheel = Math.randomRange(0, 5)
+            randomcolor = Math.randomRange(0, 255)
+            lock = 1
+        }
+        if (bright <= 100) {
+            if (randomwheel == 0) {
+                light.setAll(light.rgb(randomcolor * bright / 100, 255 * bright / 100, 0))
+            } else if (randomwheel == 1) {
+                light.setAll(light.rgb(0, 255 * bright / 100, randomcolor * bright / 100))
+            } else if (randomwheel == 2) {
+                light.setAll(light.rgb(randomcolor * bright / 100, 0, 255 * bright / 100))
+            } else if (randomwheel == 3) {
+                light.setAll(light.rgb(255 * bright / 100, randomcolor * bright / 100, 0))
+            } else if (randomwheel == 4) {
+                light.setAll(light.rgb(255 * bright / 100, 0, randomcolor * bright / 100))
+            } else if (randomwheel == 5) {
+                light.setAll(light.rgb(0, randomcolor * bright / 100, 255 * bright / 100))
+            }
+        } else if (bright <= 200) {
+            if (randomwheel == 0) {
+                light.setAll(light.rgb(randomcolor * (200 - bright) / 100, 255 * (200 - bright) / 100, 0))
+            } else if (randomwheel == 1) {
+                light.setAll(light.rgb(0, 255 * (200 - bright) / 100, randomcolor * (200 - bright) / 100))
+            } else if (randomwheel == 2) {
+                light.setAll(light.rgb(randomcolor * (200 - bright) / 100, 0, 255 * (200 - bright) / 100))
+            } else if (randomwheel == 3) {
+                light.setAll(light.rgb(255 * (200 - bright) / 100, randomcolor * (200 - bright) / 100, 0))
+            } else if (randomwheel == 4) {
+                light.setAll(light.rgb(255 * (200 - bright) / 100, 0, randomcolor * (200 - bright) / 100))
+            } else if (randomwheel == 5) {
+                light.setAll(light.rgb(0, randomcolor * (200 - bright) / 100, 255 * (200 - bright) / 100))
+            }
+        } else {
+            lock = 0
+            bright = 0
+        }
+    } else if (mode == 28) {
+        bright += 1
+        if (lock == 0) {
+            r = Math.randomRange(0, 255)
+            g = Math.randomRange(0, 255)
+            b = Math.randomRange(0, 255)
+            lock = 1
+        }
+        if (bright <= 100) {
+            light.setAll(light.rgb(r * bright / 100, g * bright / 100, b * bright / 100))
+        } else if (bright <= 200) {
+            light.setAll(light.rgb(r * (200 - bright) / 100, g * (200 - bright) / 100, b * (200 - bright) / 100))
+        } else {
+            lock = 0
+            bright = 0
+        }
+    } else if (mode == 29) {
+        changecolor += 1
+        if (changecolor == 1) {
+            light.setAll(light.rgb(255, 0, 0))
+        } else if (changecolor == 2) {
+            light.setAll(light.rgb(0, 255, 0))
+        } else if (changecolor == 3) {
+            light.setAll(light.rgb(0, 0, 255))
+        } else if (changecolor == 4) {
+            light.setAll(light.rgb(255, 255, 0))
+        } else if (changecolor == 5) {
+            light.setAll(light.rgb(0, 255, 255))
+        } else if (changecolor == 6) {
+            light.setAll(light.rgb(255, 0, 255))
+        } else if (changecolor == 7) {
+            light.setAll(light.rgb(255, 127, 0))
+        } else if (changecolor == 8) {
+            light.setAll(light.rgb(0, 255, 127))
+        } else if (changecolor == 9) {
+            light.setAll(light.rgb(127, 0, 255))
+        } else if (changecolor == 10) {
+            light.setAll(light.rgb(127, 255, 0))
+        } else if (changecolor == 11) {
+            light.setAll(light.rgb(0, 127, 255))
+        } else if (changecolor == 12) {
+            light.setAll(light.rgb(255, 0, 127))
+        } else if (changecolor == 13) {
+            light.setAll(light.rgb(255, 255, 255))
+            changecolor = 0
+        }
+        pause(200)
+    } else if (mode == 30) {
+        colorindex = startindex
+        for (let pixelindex = 0; pixelindex <= 9; pixelindex++) {
+            colorwheel += 1
+            if (lock < 5) {
+                if (colorwheel > 24) {
+                    colorwheel = 1
+                }
+                if (colorwheel == 1) {
+                    light.setPixelColor(colorindex, light.rgb(255, 0, 0))
+                } else if (colorwheel == 2) {
+                    light.setPixelColor(colorindex, light.rgb(255, 63, 0))
+                } else if (colorwheel == 3) {
+                    light.setPixelColor(colorindex, light.rgb(255, 127, 0))
+                } else if (colorwheel == 4) {
+                    light.setPixelColor(colorindex, light.rgb(255, 191, 0))
+                } else if (colorwheel == 5) {
+                    light.setPixelColor(colorindex, light.rgb(255, 255, 0))
+                } else if (colorwheel == 6) {
+                    light.setPixelColor(colorindex, light.rgb(191, 255, 0))
+                } else if (colorwheel == 7) {
+                    light.setPixelColor(colorindex, light.rgb(127, 255, 0))
+                } else if (colorwheel == 8) {
+                    light.setPixelColor(colorindex, light.rgb(63, 255, 0))
+                } else if (colorwheel == 9) {
+                    light.setPixelColor(colorindex, light.rgb(0, 255, 0))
+                } else if (colorwheel == 10) {
+                    light.setPixelColor(colorindex, light.rgb(0, 255, 63))
+                } else if (colorwheel == 11) {
+                    light.setPixelColor(colorindex, light.rgb(0, 255, 127))
+                } else if (colorwheel == 12) {
+                    light.setPixelColor(colorindex, light.rgb(0, 255, 191))
+                } else if (colorwheel == 13) {
+                    light.setPixelColor(colorindex, light.rgb(0, 255, 255))
+                } else if (colorwheel == 14) {
+                    light.setPixelColor(colorindex, light.rgb(0, 191, 255))
+                } else if (colorwheel == 15) {
+                    light.setPixelColor(colorindex, light.rgb(0, 127, 255))
+                } else if (colorwheel == 16) {
+                    light.setPixelColor(colorindex, light.rgb(0, 63, 255))
+                } else if (colorwheel == 17) {
+                    light.setPixelColor(colorindex, light.rgb(0, 0, 255))
+                } else if (colorwheel == 18) {
+                    light.setPixelColor(colorindex, light.rgb(63, 0, 255))
+                } else if (colorwheel == 19) {
+                    light.setPixelColor(colorindex, light.rgb(127, 0, 255))
+                } else if (colorwheel == 20) {
+                    light.setPixelColor(colorindex, light.rgb(191, 0, 255))
+                } else if (colorwheel == 21) {
+                    light.setPixelColor(colorindex, light.rgb(255, 0, 255))
+                } else if (colorwheel == 22) {
+                    light.setPixelColor(colorindex, light.rgb(255, 0, 191))
+                } else if (colorwheel == 23) {
+                    light.setPixelColor(colorindex, light.rgb(255, 0, 127))
+                } else if (colorwheel == 24) {
+                    light.setPixelColor(colorindex, light.rgb(255, 0, 63))
+                }
+                lock += 1
+            } else {
+                light.setPixelColor(colorindex, light.rgb(0, 0, 0))
+            }
+            colorindex += 1
+            if (colorindex > 9) {
+                colorindex = 0
+            }
+        }
+        startindex += 1
+        if (startindex > 9) {
+            startindex = 0
+        }
+        pause(200)
+        colorwheel += -9
+        lock = 0
+    } else {
+        mode = 0
+        part = 0
+    }
+})
